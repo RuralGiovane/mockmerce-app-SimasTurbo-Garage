@@ -6,29 +6,16 @@ import { money } from '@/lib/format';
 import { Button, ErrorState, Loading } from '@/components/ui';
 import type { RootStackParamList } from '@/navigation';
 import type { ApiError, Product, ProductVariant } from '@/types/api';
+import { useProduct } from '@/hooks/useProduct';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductDetail'>;
 
 export function ProductDetailScreen({ route }: Props) {
   const { id } = route.params;
-
-  const [product, setProduct] = useState<Product | null>(null);
+  const { data: product, isLoading, isError, error, refetch } = useProduct(id);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [variantId, setVariantId] = useState<string | null>(null);
-
-  useEffect(() => {
-    let vivo = true;
-    setLoading(true);
-    setErro(null);
-    getProduct(id)
-      .then((p) => vivo && setProduct(p))
-      .catch((e: ApiError) => vivo && setErro(e.message))
-      .finally(() => vivo && setLoading(false));
-    return () => {
-      vivo = false;
-    };
-  }, [id]);
+  const [variantId, setVariantId] = useState<string | null>(null); 
 
   const selected: ProductVariant | undefined = useMemo(() => {
     if (!product) return undefined;
@@ -39,12 +26,8 @@ export function ProductDetailScreen({ route }: Props) {
     );
   }, [product, variantId]);
 
-  if (loading) {
-    return <Loading label="Carregando produto…" />;
-  }
-  if (erro || !product) {
-    return <ErrorState message={erro ?? 'Falha'} />;
-  }
+  if (isLoading) { return <Loading label="Carregando produto…" />; }
+  if (isError || !product) { return <ErrorState message={(error as ApiError)?.message ?? 'Falha'} onRetry={() => refetch()} />; }
 
   const outOfStock = !selected || selected.stock <= 0;
 
@@ -81,8 +64,7 @@ export function ProductDetailScreen({ route }: Props) {
           addItem.mutate({ variantId, quantity: 1, name, unitPrice }). */}
       <Button
         label="Adicionar ao carrinho"
-        onPress={() => Alert.alert('Semana 2', 'Ligar o carrinho: useCartMutations + login (Blocos 2 e 3).')}
-        disabled={outOfStock}
+        onPress={() => Alert.alert('Semana 2', 'Ligar o carrinho: useCartMutations + login (Blocos 2 e 3).')} disabled={outOfStock}
       />
     </ScrollView>
   );

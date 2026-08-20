@@ -17,7 +17,6 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient} >
-        <>
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen name="Products" component={ProductsScreen} options={{ title: 'Loja da Turma' }} />
@@ -30,9 +29,7 @@ export default function App() {
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="dark" />
-        </>
-      </QueryClientProvider>
-
+        </QueryClientProvider>
     </SafeAreaProvider>
   );
 }

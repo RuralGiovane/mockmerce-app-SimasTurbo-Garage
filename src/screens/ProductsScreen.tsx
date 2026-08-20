@@ -33,7 +33,7 @@ export function ProductsScreen({ navigation }: Props) {
         <ErrorState message={(error as ApiError).message} onRetry={() => refetch()} />
       ) : (
         <FlatList
-          data={data}
+          data={data?.data?? []}
           keyExtractor={(p) => p.id}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={isFetching && !isLoading} onRefresh={() => refetch()} />}

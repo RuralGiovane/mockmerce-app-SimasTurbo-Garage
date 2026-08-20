@@ -1,54 +1,46 @@
-# Comece aqui 👋 — Semana 2 (TanStack Query)
+# Comece aqui 👋 — Semana 3 (Checkout e Pedidos)
 
-Este é o app do seu grupo **no estado final da Semana 1**: ele lista produtos e abre
-o detalhe, buscando dados **na mão** (`useState` + `useEffect`). O carrinho é um
-placeholder. Sua missão nesta semana é transformar este app no app "de produto":
-com **cache, revalidação e carrinho otimista** — usando **TanStack Query**.
+Este é o app do seu grupo com tudo das Semanas 1–2 (produtos, carrinho otimista) **+
+login/cadastro + guarda de rotas** já prontos (pelo backend). Roda no **Expo Go**.
 
-## 1. Rodar (5 min)
+Hoje o carrinho tem um botão **"Finalizar compra"** que ainda não faz nada. Sua missão
+nesta semana é **fechar a compra de verdade**: `checkout → pagamento → pedido → histórico`,
+usando as rotas de pedido que o backend já tem.
+
+## 0. Rode como está (5 min)
 
 ```bash
 npm install
-cp .env.example .env      # preencha URL, API Key e RM do SEU grupo
-npm start                 # leia o QR no Expo Go, ou aperte a / i
+cp .env.example .env      # API Key e RM do grupo (URL já é a nuvem)
+npm start                 # Expo Go → abre no Login; crie conta / entre
 ```
 
-> **URL da API:** o padrão já é o backend **na nuvem** (`https://api.mockmerce.com.br`) —
-> funciona em qualquer plataforma, sem configurar IP. Só precisa preencher API Key e RM do
-> seu grupo. (Localhost/`10.0.2.2` só se você mesmo rodar o backend — ver `.env.example`.)
+## 1. A base que já veio pronta (leia antes de codar, ~10 min)
 
-Abra o app: você deve conseguir **buscar produtos e abrir um produto**. É daqui que a gente parte.
+Você **não precisa** mexer nisso, mas entenda como funciona — cai na prova mental:
+- `src/session/session.tsx` — guarda o login (`signIn`/`signUp` no backend, `isLoggedIn`).
+- `src/screens/SignInScreen.tsx` / `SignUpScreen.tsx` — as telas de auth.
+- `App.tsx` — a **guarda de rotas**: sem login → `AuthStack`; com login → `AppStack`.
 
-## 2. O que existe (não mexa, é a Semana 1)
+## 2. O que VOCÊ vai construir (mapa → exercícios)
 
-```
-src/services/   http.ts, products.ts, cart.ts, auth.ts   ← camada de serviços pronta
-src/types/      api.ts                                    ← tipos da API
-src/components/  ui.tsx        src/lib/format.ts          ← UI e utilitários
-```
-
-## 3. O que VOCÊ vai criar (a Semana 2)
-
-Estes arquivos **não existem ainda** — você cria seguindo o `../exercicios.md`:
-
-| Quando | Arquivo a criar | Exercício |
+| Arquivo (criar/editar) | O quê | Exercício |
 |---|---|---|
-| **Segunda** (dever) | `src/lib/queryClient.ts` + ligar `<QueryClientProvider>` no `App.tsx` | §1.1 |
-| **Segunda** (dever) | `src/lib/queryKeys.ts` e `src/hooks/useProducts.ts`; migrar `ProductsScreen` | §1.2–1.3 |
-| **Quarta** Bloco 1 | `src/hooks/useProduct.ts`; migrar `ProductDetailScreen` | §2 B1 |
-| **Quarta** Bloco 2 | `src/session/session.tsx` + `src/hooks/useCart.ts` (login + carrinho) | §2 B2 |
-| **Quarta** Bloco 3 | `src/hooks/useCartMutations.ts` (otimista) + construir `CartScreen` | §2 B3 |
+| `src/services/orders.ts` | chamadas: checkout, list, get, pay, cancel, timeline | §1 |
+| `src/lib/queryKeys.ts` + `src/lib/orders.ts` | keys de pedido + `statusLabel/statusColor` | §1 |
+| `src/hooks/useOrders.ts` | `useOrders` / `useOrder` / `useOrderTimeline` (queries) | §2 |
+| `src/hooks/useOrderActions.ts` | `useCheckout` / `usePayOrder` / `useCancelOrder` (mutations) | §2 |
+| `src/screens/CheckoutScreen.tsx` | revisão + criar pedido | §2 |
+| `src/screens/OrderScreen.tsx` | status + pagamento simulado + linha do tempo | §3 |
+| `src/screens/OrdersScreen.tsx` | histórico | §3 |
+| `src/navigation.ts` + `App.tsx` | registrar Checkout/Order/Orders | §3 |
+| `CartScreen` + `ProductsScreen` | "Finalizar" → Checkout; botão "Pedidos" | §3 |
 
-Cada tela a migrar tem um comentário `>>> SEU TRABALHO <<<` no topo apontando o caminho.
+## Regras de ouro
 
-## 4. Regras de ouro
+- **A unidade é a VARIANTE** (o carrinho já usa `variantId`); o pedido nasce do carrinho.
+- **Pagar não é otimista.** Diferente do carrinho: em pagamento, espere a resposta do
+  servidor e reconcilie o cache. Otimismo é pra micro-interação, não pra dinheiro.
+- Trate **todos os estados**: carrinho vazio, pagamento **recusado**, loading, erro, sucesso.
 
-- **A unidade vendável é a VARIANTE.** Carrinho usa `variantId`; preço/estoque vêm em
-  `product.variants[]` (o detalhe), não na listagem.
-- **Quem lê e quem invalida usam a MESMA query key.** Centralize em `queryKeys.ts`.
-- **Sem `any`** sem justificativa documentada (penalidade nos checkpoints).
-
-## 5. Travou?
-
-Confira o app pronto do professor em `../app-professor-completo/` — mas tente **antes**
-de olhar. A ideia de quarta é chegar com dúvida real.
+Travou? Compare com `../app-professor-completo/` — mas tente antes.

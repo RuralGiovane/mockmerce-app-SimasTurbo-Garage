@@ -5,9 +5,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import { SignInScreen } from '@/screens/SignInScreen'
+import { SignUpScreen } from '@/screens/SignUpScreen'
+import { ForgotPasswordScreen } from '@/screens/ForgotPasswordScreen'
+
 import { ProductsScreen } from '@/screens/ProductsScreen';
 import { ProductDetailScreen } from '@/screens/ProductDetailScreen';
+
 import { CartScreen } from '@/screens/CartScreen';
+import { CheckoutScreen } from '@/screens/CheckoutScreen'
+import { OrderScreen } from '@/screens/OrderScreen'
+import { OrdersScreen } from '@/screens/OrdersScreen'
 
 import { ApiError } from '@/types/api';
 import { queryClient } from '@/lib/queryClient';
@@ -33,7 +41,7 @@ function AuthFlow() {
 function AppFlow() {
   return (
     <AppStack.Navigator>
-      <AppStack.Screen name="product" components={ProductsScreen} options={{ title: "SimasTurboGarage" }} />
+      <AppStack.Screen name="Products" component={ProductsScreen} options={{ title: "SimasTurboGarage" }} />
       <AppStack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}

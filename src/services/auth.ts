@@ -1,5 +1,11 @@
 import { http } from './http';
-import type { AuthResponse } from '@/types/api';
+import type { AuthResponse, Customer } from '@/types/api';
+
+/** GET /auth/me */
+export async function getMe(): Promise<Customer> {
+  const { data } = await http.get<Customer>('/auth/me');
+  return data;
+}
 
 export async function login(email: string, password: string): Promise<AuthResponse> {
   const { data } = await http.post<AuthResponse>('/auth/login', { email, password });

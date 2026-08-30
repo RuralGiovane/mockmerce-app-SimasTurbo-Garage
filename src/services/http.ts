@@ -13,14 +13,17 @@ export const http = axios.create({
 });
 
 let customerToken: string | null = null;
+let onUnauthorized: (() => void) | null = null;
 
 export function setCustomerToken(token: string | null) {
   customerToken = token;
 }
 
-http.interceptors.request.use((config) => {
-  console.log("Estou puxando do back....");
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+  onUnauthorized = handler;
+}
 
+http.interceptors.request.use((config) => {
   if (customerToken) {
     config.headers.set('Authorization', `Bearer ${customerToken}`);
   } else {
@@ -29,12 +32,15 @@ http.interceptors.request.use((config) => {
   return config;
 });
 
-
 http.interceptors.response.use(
   (response) => response,
   (error: AxiosError<{ error?: { code?: string; message?: string } }>) => {
     const status = error.response?.status ?? 0;
     const payload = error.response?.data?.error;
+
+    if (status === 401) {
+      onUnauthorized?.();
+    }
 
     if (payload) {
       return Promise.reject(new ApiError(payload.code ?? 'ERROR', payload.message ?? 'Erro na API', status));

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
@@ -17,9 +16,8 @@ import { CheckoutScreen } from '@/screens/CheckoutScreen'
 import { OrderScreen } from '@/screens/OrderScreen'
 import { OrdersScreen } from '@/screens/OrdersScreen'
 
-import { ApiError } from '@/types/api';
 import { queryClient } from '@/lib/queryClient';
-import { SessionProvider } from '@/session/session';
+import { SessionProvider, useSession } from '@/session/session';
 import type { RootStackParamList, AuthStackParamList } from '@/navigation';
 
 // Stacks
@@ -58,7 +56,7 @@ function AppFlow() {
 
 // Verifica estado de Login do usuario
 function RootNavigator() {
-  const { isLoggedIn } = useState();
+  const { isLoggedIn } = useSession();
   return isLoggedIn ? <AppFlow /> : <AuthFlow />;
 }
 

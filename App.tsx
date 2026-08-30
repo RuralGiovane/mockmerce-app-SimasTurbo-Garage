@@ -16,6 +16,7 @@ import { CheckoutScreen } from '@/screens/CheckoutScreen'
 import { OrderScreen } from '@/screens/OrderScreen'
 import { OrdersScreen } from '@/screens/OrdersScreen'
 
+import { Loading } from '@/components/ui';
 import { queryClient } from '@/lib/queryClient';
 import { SessionProvider, useSession } from '@/session/session';
 import type { RootStackParamList, AuthStackParamList } from '@/navigation';
@@ -56,7 +57,12 @@ function AppFlow() {
 
 // Verifica estado de Login do usuario
 function RootNavigator() {
-  const { isLoggedIn } = useSession();
+  const { isLoggedIn, isLoadingSession } = useSession();
+
+  if (isLoadingSession) {
+    return <Loading label="Carregando sessão…" />;
+  }
+
   return isLoggedIn ? <AppFlow /> : <AuthFlow />;
 }
 

@@ -1,53 +1,88 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { setCustomerToken } from '@/services/http';
-import { login as loginService, register as registerService } from '@/services/auth';
-import { queryKeys } from '@/lib/queryKeys';
+import { setCustomerToken, setUnauthorizedHandler } from '@/services/http';
+import { login as loginService, register as registerService, getMe } from '@/services/auth';
+import { saveCustomerToken, getStoredCustomerToken } from '@/services/storage';
 import type { Customer } from '@/types/api';
 
 interface SessionValue {
-    customer: Customer | null;
-    isLoggedIn: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
-    signUp: (name: string, email: string, password: string) => Promise<void>;
-    signOut: () => void;
+  customer: Customer | null;
+  isLoggedIn: boolean;
+  isLoadingSession: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (name: string, email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const SessionContext = createContext<SessionValue | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-    const [customer, setCustomer] = useState<Customer | null>(null);
-    const queryClient = useQueryClient();
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const queryClient = useQueryClient();
 
-    const value = useMemo<SessionValue>(
-        () => ({
-        customer,
-        isLoggedIn: customer !== null,
-        async signIn(email, password) {
-            const res = await loginService(email, password);
-            setCustomerToken(res.token);
-            setCustomer(res.customer);
-        },
-        async signUp(name, email, password) {
-            const res = await registerService(name, email, password);
-            setCustomerToken(res.token);
-            setCustomer(res.customer);
-        },
-        signOut() {
-            setCustomerToken(null);
-            setCustomer(null);
-            // O carrinho era daquele cliente — some do cache.
-            queryClient.removeQueries({ queryKey: queryKeys.cart.all });
-        },
-        }),
-        [customer, queryClient],
-    );
+  const signOut = useCallback(async () => {
+    setCustomerToken(null);
+    await saveCustomerToken(null);
+    setCustomer(null);
+    queryClient.clear();
+  }, [queryClient]);
 
-    return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const storedToken = await getStoredCustomerToken();
+        if (storedToken) {
+          setCustomerToken(storedToken);
+          const customerData = await getMe();
+          setCustomer(customerData);
+        }
+      } catch {
+        setCustomerToken(null);
+        await saveCustomerToken(null);
+        setCustomer(null);
+      } finally {
+        setIsLoadingSession(false);
+      }
+    }
+
+    restoreSession();
+  }, []);
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      signOut();
+    });
+    return () => setUnauthorizedHandler(null);
+  }, [signOut]);
+
+  const value = useMemo<SessionValue>(
+    () => ({
+      customer,
+      isLoggedIn: customer !== null,
+      isLoadingSession,
+      async signIn(email, password) {
+        const res = await loginService(email, password);
+        setCustomerToken(res.token);
+        await saveCustomerToken(res.token);
+        setCustomer(res.customer);
+      },
+      async signUp(name, email, password) {
+        const res = await registerService(name, email, password);
+        setCustomerToken(res.token);
+        await saveCustomerToken(res.token);
+        setCustomer(res.customer);
+      },
+      signOut,
+    }),
+    [customer, isLoadingSession, signOut],
+  );
+
+  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }
 
 export function useSession(): SessionValue {
-    const ctx = useContext(SessionContext);
-    if (!ctx) throw new Error('useSession precisa estar dentro de <SessionProvider>.');
-    return ctx;
+  const ctx = useContext(SessionContext);
+  if (!ctx) throw new Error('useSession precisa estar dentro de <SessionProvider>.');
+  return ctx;
 }

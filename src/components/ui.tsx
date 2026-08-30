@@ -1,4 +1,18 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+
+/** Campo de texto padronizado (usado nas telas de login/cadastro). */
+export function TextField(props: TextInputProps) {
+  return <TextInput placeholderTextColor="#9ca3af" style={styles.input} {...props} />;
+}
+
+/** Etiqueta colorida — usada para o status do pedido. */
+export function Badge({ label, color }: { label: string; color: string }) {
+  return (
+    <View style={[styles.badge, { borderColor: color }]}>
+      <Text style={[styles.badgeText, { color }]}>{label}</Text>
+    </View>
+  );
+}
 
 export function Center({ children }: { children: React.ReactNode }) {
   return <View style={styles.center}>{children}</View>;
@@ -13,6 +27,7 @@ export function Loading({ label = 'Carregando…' }: { label?: string }) {
   );
 }
 
+/** Estado de erro com botão de tentar de novo (ex.: refetch de uma query). */
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <Center>
@@ -66,4 +81,21 @@ const styles = StyleSheet.create({
   btnDim: { opacity: 0.55 },
   btnText: { color: '#fff', fontWeight: '700' },
   btnTextGhost: { color: '#111827' },
+  input: {
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: '#111827',
+  },
+  badge: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+  badgeText: { fontSize: 12, fontWeight: '700' },
 });

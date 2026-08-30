@@ -10,3 +10,14 @@ export async function register(name: string, email: string, password: string): P
   const { data } = await http.post<AuthResponse>('/auth/register', { name, email, password });
   return data;
 }
+
+/** POST /auth/forgot-password — pede um código de redefinição (chega no e-mail). */
+export async function forgotPassword(email: string): Promise<void> {
+  await http.post('/auth/forgot-password', { email });
+}
+
+/** POST /auth/reset-password — redefine a senha com o código. */
+export async function resetPassword(email: string, code: string, newPassword: string): Promise<AuthResponse> {
+  const { data } = await http.post<AuthResponse>('/auth/reset-password', { email, code, newPassword });
+  return data;
+}

@@ -5,8 +5,12 @@ import { useSession } from '@/session/session';
 import { money } from '@/lib/format';
 import { Button, ErrorState, Loading } from '@/components/ui';
 import type { ApiError } from '@/types/api';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '@/navigation';
 
-export function CartScreen() {
+type Props = NativeStackScreenProps<RootStackParamList, 'Cart'>;
+
+export function CartScreen({ navigation }: Props) {
   const { data: cart, isLoading, isError, error, refetch } = useCart();
   const { setQuantity, removeItem } = useCartMutations();
   const { customer, signOut } = useSession();
@@ -63,8 +67,8 @@ export function CartScreen() {
             <View style={styles.footer}>
               <Text style={styles.total}>Total: {money(cart?.total ?? 0)}</Text>
               <Button
-                label="Finalizar (checkout)"
-                onPress={() => Alert.alert('Checkout', 'Fluxo de pedido: próxima aula.')}
+                label="Finalizar compra"
+                onPress={() => navigation.navigate('Checkout')}
               />
             </View>
           ) : null

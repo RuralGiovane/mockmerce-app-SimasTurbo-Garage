@@ -8,5 +8,11 @@ export const queryKeys = {
     },
     cart: {
         all: ['cart'] as const,
+    },
+    orders: {
+        all: ['orders'] as const,
+        list: () => ['orders', 'list'] as const,
+        detail: (id: string) => ['orders', 'detail', id] as const,
+        timeline: (id: string) => ['orders', 'timeline', id] as const
     }
 }

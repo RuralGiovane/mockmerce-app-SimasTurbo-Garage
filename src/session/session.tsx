@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, useCallback, t
 import { useQueryClient } from '@tanstack/react-query';
 import { setCustomerToken, setUnauthorizedHandler } from '@/services/http';
 import { login as loginService, register as registerService, getMe } from '@/services/auth';
-import { saveCustomerToken, getStoredCustomerToken } from '@/services/storage';
+import { saveCustomerToken, getStoredCustomerToken, removeCustomerFavoritesCache } from '@/services/storage';
 import type { Customer } from '@/types/api';
 
 interface SessionValue {

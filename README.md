@@ -63,7 +63,7 @@
 ---
 
 ## 4. Acesso à Loja
-* **API Key da Loja:** `sk_live_3563e773b1bd86200fae38daf912f9f8d1453a3c812a960c`
+* **API Key da Loja:** ``
 
 *(Utilizada pelo corretor para testar a loja isolada no backend da turma).*
 

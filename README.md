@@ -106,7 +106,7 @@
 ---
 
 ## 7. Decisões de Produto
-* **Proposta da Loja:** Simas Turbo Garage — Loja especializada em peças de alta performance, autopeças e acessórios automotivos.
+* **Proposta da Loja:** Simas Turbo Garage — Loja especializada em peças que você queria e acessórios nada sugestivos (contem ironia).
 * **Público-alvo:** Entusiastas de carros, mecânicos e preparadores automotivos.
 * **Escolhas de Interface & Telas:** Layout temático, cards com destaque visual para especificações técnicas da peça e alertas rápidos de estoque.
 

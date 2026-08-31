@@ -12,6 +12,7 @@ import { ProductsScreen } from '@/screens/ProductsScreen';
 import { ProductDetailScreen } from '@/screens/ProductDetailScreen';
 
 import { CartScreen } from '@/screens/CartScreen';
+import { FavoritesScreen } from '@/screens/FavoritesScreen';
 import { CheckoutScreen } from '@/screens/CheckoutScreen'
 import { OrderScreen } from '@/screens/OrderScreen'
 import { OrdersScreen } from '@/screens/OrdersScreen'
@@ -46,6 +47,7 @@ function AppFlow() {
         component={ProductDetailScreen}
         options={({ route }) => ({ title: route.params.name })}
       />
+      <AppStack.Screen name="Favorites" component={FavoritesScreen} options={{ title: 'Meus Favoritos' }} />
       <AppStack.Screen name="Cart" component={CartScreen} options={{ title: 'Carrinho' }} />
       <AppStack.Screen name="Checkout" component={CheckoutScreen} options={{ title: 'Checkout' }} />
       <AppStack.Screen name="Order" component={OrderScreen} options={{ title: 'Pedido' }} />

@@ -24,6 +24,7 @@ export function ProductsScreen({ navigation }: Props) {
           onChangeText={setSearch}
           autoCorrect={false}
         />
+        <Button label="Favoritos" variant="ghost" onPress={() => navigation.navigate('Favorites')} />
         <Button label="Pedidos" variant="ghost" onPress={() => navigation.navigate('Orders')} />
         <Button label="Carrinho" variant="ghost" onPress={() => navigation.navigate('Cart')} />
       </View>

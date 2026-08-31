@@ -17,7 +17,7 @@
 | :--- | :--- | :--- |
 | André Emygdio | Services de Favoritos, Tipos e Persistência de Sessão | `src/types/api.ts`, `src/lib/queryKeys.ts`, `src/services/favorites.ts`, `src/services/storage.ts`, `src/session/session.tsx` |
 | Gabriel Lourenço | Autenticação, Login e SecureStore | `src/screens/LoginScreen.tsx`, `src/contexts/AuthContext.tsx` |
-| Giovane Amato | Fluxo de Autenticação (SignIn, SignUp, ForgotPassword), Setup do SecureStore e Customização de Layout e cores| `src/screens/SignInScreen.tsx`, `src/screens/SignUpScreen.tsx`, `src/screens/ForgotPasswordScreen.tsx`, `package.json` |
+| Giovane Amato | Fluxo de Autenticação (SignIn, SignUp, ForgotPassword), Setup do SecureStore e Customização de Layout e cores| `src/screens/SignInScreen.tsx`, `src/screens/SignUpScreen.tsx`, `src/screens/ForgotPasswordScreen.tsx`, `package.json`, `src/screens` |
 | Matheus Roque | Hook e Tela de Favoritos, Navegação e Detalhes do Produto | `src/hooks/useFavorites.ts`, `src/screens/FavoritesScreen.tsx`, `src/navigation.ts`, `App.tsx`, `src/screens/ProductsScreen.tsx`, `src/screens/ProductDetailScreen.tsx`, `src/hooks/useCartMutations.ts` |
 | Orlando Gonçalves | Persistência Segura (SecureStore), Validação com /auth/me e Interceptor 401 | `src/services/storage.ts`, `src/session/session.tsx`, `src/services/auth.ts`, `src/services/http.ts`, `App.tsx` |
 

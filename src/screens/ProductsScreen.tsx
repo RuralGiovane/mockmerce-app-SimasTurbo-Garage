@@ -1,16 +1,5 @@
 import { useRef, useState } from 'react';
-import {
-  Animated,
-  FlatList,
-  Image,
-  Modal,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Animated, FlatList, Image, Modal, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { money } from '@/lib/format';
@@ -69,12 +58,17 @@ export function ProductsScreen({ navigation }: Props) {
     });
   }
 
-  function navigateTo(screen: keyof RootStackParamList, params?: any) {
+  function navigateTo(screen: 'Products' | 'Cart' | 'Favorites' | 'Checkout' | 'Orders'): void;
+  function navigateTo( screen: 'ProductDetail', params: { id: string; name: string }): void;
+  function navigateTo( screen: 'Order', params: { id: string }): void;
+  function navigateTo( screen: keyof RootStackParamList, params?: { id: string; name?: string }) {
     closeMenu(() => {
-      if (params) {
-        navigation.navigate(screen as any, params);
-      } else {
-        navigation.navigate(screen as any);
+      if (screen === 'ProductDetail' && params && params.name) {
+        navigation.navigate('ProductDetail', { id: params.id, name: params.name });
+      } else if (screen === 'Order' && params) {
+        navigation.navigate('Order', { id: params.id });
+      } else if (screen !== 'ProductDetail' && screen !== 'Order') {
+        navigation.navigate(screen);
       }
     });
   }

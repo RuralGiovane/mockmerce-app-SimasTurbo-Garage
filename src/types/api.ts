@@ -84,6 +84,19 @@ export interface Customer {
   email: string;
 }
 
+export interface FavoriteItem {
+  id?: string;
+  variantId: string;
+  productId?: string;
+  productName?: string;
+  name?: string;
+  variantName?: string | null;
+  sku?: string;
+  price?: number;
+  image?: string | null;
+  createdAt?: string;
+}
+
 export interface AuthResponse {
   token: string;
   customer: Customer;
@@ -110,8 +123,8 @@ export interface Payment {
   transactionId: string;
 }
 
-// Pedido. `
-//Nota: status` é o estado da máquina: PENDING -> PAID / CANCELLED / ...
+// Pedido.
+//Nota: 'status' é o estado da máquina: PENDING -> PAID / CANCELLED / ...
 export interface Order {
   id: string;
   status: string;

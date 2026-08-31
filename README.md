@@ -51,7 +51,7 @@
      ```
    * Preencha as chaves no `.env`:
      ```env
-     EXPO_PUBLIC_API_URL=https://api.mockmerce.com.br/v1
+     EXPO_PUBLIC_API_URL=https://api.mockmerce.com.br
      EXPO_PUBLIC_API_KEY=sua_api_key_aqui
      EXPO_PUBLIC_STUDENT_RM=seu_rm_aqui
      ```
@@ -81,11 +81,11 @@
 
 1. **Persistência segura e validação de sessão na inicialização**
    * **Por quê:** O token JWT é armazenado no `expo-secure-store` (armazenamento criptografado do sistema). Ao abrir o aplicativo, a sessão é validada contra o backend via `GET /v1/auth/me`, restaurando o comprador automaticamente ou devolvendo-o ao login caso o token esteja adulterado ou expirado.
-   * **Commit:** `6d7dace`
+   * **Commit:** `2947912`
 
 2. **Logout reativo automático no Interceptor de Response para status 401**
    * **Por quê:** Em vez de tratar erros de autorização de forma dispersa em cada tela, centralizamos no interceptor do Axios um listener reativo que aciona o `signOut()` e limpa o cache imediatamente sempre que uma rota de comprador retornar 401.
-   * **Commit:** `d40dbe4`
+   * **Commit:** `6d7dace`
 
 3. **Resgate offline de favoritos integrado diretamente no `queryFn` do TanStack Query**
    * **Por quê:** Para não utilizar o `useEffect` para busca de dados, a persistência e o resgate em modo avião foram embutidos na função `queryFn` do `useQuery`. Em caso de falha de conexão, os dados salvos localmente são retornados com a flag `isOffline` ativada para exibir o aviso na UI.
@@ -99,6 +99,10 @@
    * **Por quê:** Conforme a diretriz do CP4 (pág. 5 do PDF), estoque e valores monetários não devem ser previstos na UI. Todas as mutações de carrinho aguardam a resposta do backend antes de atualizar a interface, evitando divergências em cenários de estoque esgotado (422).
    * **Commit:** `0aaf1ee`
 
+6. **Tipagem estrita de rotas com sobrecargas de função (Function Overloads) sem uso de `any`**
+   * **Por quê:** Para cumprir integralmente as diretrizes de qualidade de código e ausência de `any` (RNF-01 e RNF-02), a função de navegação do menu drawer (`navigateTo` em `ProductsScreen.tsx`) foi refatorada com sobrecargas de função do TypeScript vinculadas diretamente ao `RootStackParamList`, assegurando validação estática de telas e parâmetros sem `any`.
+   * **Commit:** `e8a2dcf`
+
 ---
 
 ## 7. Decisões de Produto
@@ -111,8 +115,8 @@
 ## 8. Declaração de Uso de IA
 
 * **Ferramentas Utilizadas:** Antigravity (modelo: Gemini 3.7 flash - medium)
-* **Onde foi utilizada:**Estruturação inicial do README, geração de layout & animações e correções de sintaxes e lógica
-* **O que foi alterado manualmente após a geração:**Cores, nomes das variáveis para algo mais coerente, comentários para uma explicação mais clara).
+* **Onde foi utilizada:**Estruturação inicial do README, geração de layout & animações e correções de sintaxes e lógica, frefatoração da tipagem estrita de navegação para eliminação de `any` (`navigateTo` em `ProductsScreen.tsx`)
+* **O que foi alterado manualmente após a geração:**Cores, nomes das variáveis para algo mais coerente, comentários para uma explicação mais clara.
 
 ---
 

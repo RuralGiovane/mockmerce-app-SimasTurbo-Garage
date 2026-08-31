@@ -1,21 +1,24 @@
 {
   "expo": {
-    "name": "Loja da Turma",
-    "slug": "loja-turma-app",
-    "version": "0.2.0",
+    "name": "Simas Turbo Garage",
+    "slug": "simas-turbo-garage",
+    "version": "1.0.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/IMG_3357.png",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
+      "image": "./assets/IMG_3357.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0F1015"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/IMG_3357.png",
+        "backgroundColor": "#0F1015"
       }
     },
     "web": {

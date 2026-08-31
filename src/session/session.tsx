@@ -22,11 +22,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   const signOut = useCallback(async () => {
+    if (customer?.id) {
+      await removeCustomerFavoritesCache(customer.id);
+    }
     setCustomerToken(null);
     await saveCustomerToken(null);
     setCustomer(null);
     queryClient.clear();
-  }, [queryClient]);
+  }, [queryClient, customer]);
 
   useEffect(() => {
     async function restoreSession() {

@@ -115,8 +115,8 @@
 ## 8. Declaração de Uso de IA
 
 * **Ferramentas Utilizadas:** Antigravity (modelo: Gemini 3.7 flash - medium)
-* **Onde foi utilizada:**Estruturação inicial do README, geração de layout & animações e correções de sintaxes e lógica, frefatoração da tipagem estrita de navegação para eliminação de `any` (`navigateTo` em `ProductsScreen.tsx`)
-* **O que foi alterado manualmente após a geração:**Cores, nomes das variáveis para algo mais coerente, comentários para uma explicação mais clara.
+* **Onde foi utilizada:** Estruturação inicial do README, geração de layout & animações e correções de sintaxes e lógica, frefatoração da tipagem estrita de navegação para eliminação de `any` (`navigateTo` em `ProductsScreen.tsx`)
+* **O que foi alterado manualmente após a geração:** Cores, nomes das variáveis para algo mais coerente, comentários para uma explicação mais clara.
 
 ---
 

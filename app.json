@@ -19,13 +19,15 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/IMG_3357.png",
         "backgroundColor": "#0F1015"
-      }
+      },
+      "package": "com.anonymous.simasturbogarage"
     },
     "web": {
       "bundler": "metro"
     },
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-status-bar"
     ]
   }
 }

@@ -13,20 +13,28 @@
 
 ## 2. Mapa de Autoria
 
-| Integrante | Responsabilidade Principal | Arquivos Principais |
+A divisão abaixo organiza os responsáveis pela revisão, validação e manutenção de cada função antes dos commits. Ela não declara autoria exclusiva nem substitui o histórico de contribuições; a autoria efetiva será consolidada com o grupo na revisão da declaração de IA.
+
+| Função | Responsável | Arquivos |
 | :--- | :--- | :--- |
-| André Emygdio | Services de Favoritos, Tipos e Persistência de Sessão | `src/types/api.ts`, `src/lib/queryKeys.ts`, `src/services/favorites.ts`, `src/services/storage.ts`, `src/session/session.tsx` |
-| Gabriel Lourenço | Autenticação, Login e SecureStore | `src/screens/LoginScreen.tsx`, `src/contexts/AuthContext.tsx` |
-| Giovane Amato | Fluxo de Autenticação (SignIn, SignUp, ForgotPassword), Setup do SecureStore e Customização de Layout e cores| `src/screens/SignInScreen.tsx`, `src/screens/SignUpScreen.tsx`, `src/screens/ForgotPasswordScreen.tsx`, `package.json`, `src/screens` |
-| Matheus Roque | Hook e Tela de Favoritos, Navegação e Detalhes do Produto | `src/hooks/useFavorites.ts`, `src/screens/FavoritesScreen.tsx`, `src/navigation.ts`, `App.tsx`, `src/screens/ProductsScreen.tsx`, `src/screens/ProductDetailScreen.tsx`, `src/hooks/useCartMutations.ts` |
-| Orlando Gonçalves | Persistência Segura (SecureStore), Validação com /auth/me e Interceptor 401 | `src/services/storage.ts`, `src/session/session.tsx`, `src/services/auth.ts`, `src/services/http.ts`, `App.tsx` |
+| **Avaliações — formulário, fotos e listagem** | Gabriel Lourenço | `src/screens/ReviewScreen.tsx`, `src/components/ReviewsSection.tsx`, `src/components/Estrelas.tsx`, `src/components/ResumoAvaliacoes.tsx`, `src/hooks/useReviews.ts`, `src/services/reviews.ts`, `src/types/avaliacao.ts` |
+| **Autenticação — telas e chamadas de login/cadastro** | Gabriel Lourenço | `src/screens/SignInScreen.tsx`, `src/screens/SignUpScreen.tsx`, `src/screens/ForgotPasswordScreen.tsx`, `src/services/auth.ts` |
+| **Localização e pontos de retirada** | André Emygdio | `src/screens/PickupPointsScreen.tsx`, `src/components/PickupMap.tsx`, `src/components/PickupMap.web.tsx`, `src/hooks/usePickupPoints.ts`, `src/services/pickup.ts`, `src/types/localizacao.ts` |
+| **Favoritos — tela, consultas e mutações** | André Emygdio | `src/screens/FavoritesScreen.tsx`, `src/hooks/useFavorites.ts`, `src/services/favorites.ts` |
+| **Catálogo, busca e detalhe do produto** | Matheus Roque | `src/screens/ProductsScreen.tsx`, `src/screens/ProductDetailScreen.tsx`, `src/hooks/useProducts.ts`, `src/hooks/useProduct.ts`, `src/hooks/useDebounce.ts`, `src/services/products.ts` |
+| **Carrinho, checkout e pedidos** | Matheus Roque | `src/screens/CartScreen.tsx`, `src/screens/CheckoutScreen.tsx`, `src/screens/OrderScreen.tsx`, `src/screens/OrdersScreen.tsx`, `src/hooks/useCart.ts`, `src/hooks/useCartMutations.ts`, `src/hooks/useOrders.ts`, `src/hooks/useOrderActions.ts`, `src/services/cart.ts`, `src/services/orders.ts`, `src/lib/orders.ts` |
+| **Notificações locais e perfil** | Orlando Gonçalves | `src/screens/ProfileScreen.tsx`, `src/context/NotificationContext.tsx`, `src/services/notifications.ts`, `src/lib/notifications.ts`, `src/lib/notificationNavigation.ts` |
+| **Sessão, armazenamento e infraestrutura de dados** | Orlando Gonçalves | `src/session/session.tsx`, `src/services/storage.ts`, `src/services/http.ts`, `src/env.ts`, `src/lib/queryClient.ts`, `src/lib/queryKeys.ts`, `src/types/api.ts` |
+| **Identidade visual, componentes e movimento** | Giovane Amato | `src/theme/colors.ts`, `src/components/cp5Styles.ts`, `src/components/ui.tsx`, `src/components/MotionPressable.tsx`, `src/lib/motion.ts`, `src/lib/format.ts`, `assets/IMG_3357.png` |
+| **Integração, navegação, configuração e documentação** | Giovane Amato | `App.tsx`, `src/navigation.ts`, `index.js`, `app.json`, `babel.config.js`, `tsconfig.json`, `package.json`, `package-lock.json`, `.env.example`, `.gitignore`, `README.md` |
+
 
 ---
 
 ## 3. Como Rodar
 
 ### Pré-requisitos
-* Node.js (versão 18+ ou LTS)
+* Node.js compatível com Expo SDK 57 (consulte a documentação oficial do SDK)
 * Expo CLI
 * Aplicativo Expo Go ou Emulador/Dispositivo físico configurado
 
@@ -39,8 +47,6 @@
 
 2. Instale as dependências:
    ```bash
-   npm install
-   # ou
    npx expo install
    ```
 
@@ -54,25 +60,27 @@
      EXPO_PUBLIC_API_URL=https://api.mockmerce.com.br
      EXPO_PUBLIC_API_KEY=sua_api_key_aqui
      EXPO_PUBLIC_STUDENT_RM=seu_rm_aqui
+
+     # Coordenadas da loja cadastradas no painel
+     EXPO_PUBLIC_STORE_LATITUDE=
+     EXPO_PUBLIC_STORE_LONGITUDE=
+
+     # Não é necessária para executar no Expo Go
+     EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=
      ```
+   * Preencha latitude e longitude com as coordenadas reais da loja, em graus decimais. No painel, cadastre também pelo menos três pontos de retirada em locais diferentes e mantenha um produto disponível para compra.
+   * No Expo Go, deixe `EXPO_PUBLIC_GOOGLE_MAPS_API_KEY` vazia. Para um build Android próprio, a variável sozinha não configura o mapa: é necessário integrá-la à configuração nativa do Google Maps e gerar um novo build.
+   * Mantenha o `.env` e os arquivos de credenciais fora do Git.
 
 4. Inicie o aplicativo:
    ```bash
-   npx expo start
+   npx expo start --go
    ```
 ---
 
-## 4. Acesso à Loja
-* **API Key da Loja:** ``sk_live_3563e773b1bd86200fae38daf912f9f8d1453a3c812a960c``
+## 4. Acesso à Loja e conta de teste
 
-*(Utilizada pelo corretor para testar a loja isolada no backend da turma).*
-
----
-
-## 5. Credenciais de Teste
-
-* **E-mail:** `jailsonmendes@garage.com`
-* **Senha:** `SucoDeLaranja`
+A API key deve ser preenchida localmente no `.env`. Compartilhe os dados de acesso com o professor por canal privado; não os publique no repositório.
 
 ---
 
@@ -118,6 +126,10 @@
 * **Onde foi utilizada:** Estruturação inicial do README, geração de layout & animações e correções de sintaxes e lógica, frefatoração da tipagem estrita de navegação para eliminação de `any` (`navigateTo` em `ProductsScreen.tsx`)
 * **O que foi alterado manualmente após a geração:** Cores, nomes das variáveis para algo mais coerente, comentários para uma explicação mais clara.
 
+* **Ferramentas Utilizadas:** Codex (modelo: GPT-6-astra - low)
+* **Onde foi utilizada:** documentação e guia de onde implementar animações + sugestões de código de animações
+* **O que foi alterado manualmente após a geração:** configurações das animações.
+
 ---
 
 ## 9. Diário de Erro
@@ -156,7 +168,36 @@
 ---
 
 ## 10. Limitações Conhecidas
-* **Paginação com rolagem infinita no catálogo:** O app consome a listagem com paginação no servidor (`?search=`), trazendo a primeira página de 20 itens, mas ainda não possui *infinite scroll* (`onEndReached` no FlatList) para carregar páginas subsequentes (`page=2, 3...`).
+* **Paginação do catálogo:** O app exibe a primeira página de produtos retornada pela API e ainda não possui rolagem infinita ou controles para carregar as páginas seguintes.
 * **Filtros combinados de marca e categoria:** A API disponibiliza filtros por `categoryId` e `brandId`, porém a interface atual disponibiliza apenas a busca textual por nome de produto.
-* **Sincronização manual pós-modo avião:** Ao desativar o modo avião, a lista de favoritos exibe os dados salvos em cache até que o usuário execute um gesto de *pull-to-refresh* para sincronizar novamente com o servidor.
+* **Abertura sem internet:** A restauração da sessão depende de `GET /auth/me`. Se essa consulta falhar, inclusive por falta de conexão, a sessão salva é apagada e o app retorna ao login. Por isso, os favoritos em cache não ficam acessíveis ao reabrir o app offline.
+* **Favoritos vazios em cache:** Com a sessão já aberta, o fallback offline aceita apenas listas salvas com pelo menos um favorito. Uma lista vazia salva não é reconhecida como cache utilizável, e a tela apresenta erro se a consulta falhar.
+* **Sincronização pós-modo avião:** Não há garantia de atualização imediata dos favoritos quando a conexão volta. O gesto de puxar para atualizar permite buscar os dados atuais do servidor.
 * **Atualização em tempo real de status de pedidos:** Se o status de um pedido mudar externamente no painel administrativo, a tela de detalhes do pedido não atualiza por WebSockets/Polling em tempo real, exigindo que o usuário recarregue a tela.
+* **Cache de notificações:** São persistidos apenas os últimos 50 IDs de avisos apresentados por cliente. Se o histórico consultado continuar retornando mensagens que saíram desse cache, avisos antigos podem ser notificados novamente.
+* **Novos avisos com o app encerrado:** No Caminho B, os avisos novos são buscados quando o app abre, volta ao primeiro plano ou o histórico é atualizado manualmente. Não há recebimento de novas mensagens do servidor enquanto ele permanece encerrado; notificações já apresentadas continuam permitindo abrir o produto.
+* **Mapa em build Android próprio:** A configuração atual não aplica `EXPO_PUBLIC_GOOGLE_MAPS_API_KEY` ao build. Sem configurar o Google Maps nativo, o app exibe a lista de pontos e um aviso de indisponibilidade do mapa. A execução no Expo Go utiliza a configuração de mapas do próprio Expo Go.
+
+---
+
+## 11. Notificações e Movimento
+
+### Notificações — Caminho B
+
+Escolhemos notificações locais para dispensar Firebase/FCM e credenciais de push. O perfil explica o benefício antes de solicitar permissão. Na abertura da sessão e ao voltar ao primeiro plano, o app consulta `GET /push/messages`, apresenta o histórico e, se autorizado, agenda avisos locais com título, corpo e `data` completos. O canal Android é criado antes da solicitação. A negativa e a indisponibilidade mantêm o histórico utilizável, com acesso aos ajustes e nova tentativa.
+
+O histórico aceita uma lista ou envelope `{ data: [...] }`, com mensagens `{ id, title, body, data }`. Formatos inesperados geram erro legível. Não há registro de aparelhos no Caminho B.
+
+O toque usa `data.produtoId`. Uma abertura com app encerrado consulta a última resposta de notificação e aguarda o navegador autenticado. Uma mensagem de outra conta não navega. Os limites do cache e da consulta de novos avisos estão descritos na seção 10.
+
+Uma notificação local é agendada depois que o app consulta o histórico. Não existe recebimento de novas mensagens do servidor enquanto o aplicativo permanece encerrado; essa é a diferença de transporte prevista no Caminho B. Uma notificação já apresentada pode abrir o produto mesmo após encerrar o app.
+
+### Defesa do movimento
+
+As configurações ficam em `src/lib/motion.ts`. `ANIMATIONS_ENABLED = false` desliga os movimentos implementados, inclusive transições de navegação e drawer. A preferência do sistema é consultada e acompanhada enquanto o aplicativo está aberto.
+
+- **Mantidos:** mola curta nos botões e cards (confirma o toque), entrada escalonada do catálogo com atraso máximo de 270 ms (ajuda a perceber os itens sem atrasar listas longas), saída de itens de carrinho/favoritos e acomodação da lista (explica a remoção), indicador de carregamento e abertura curta do menu existente.
+- **Feedback sem movimento:** opacidade ao pressionar, texto e coração alterados ao favoritar, mensagens de erro/sucesso e rótulo de carregamento continuam visíveis. Com “Reduzir movimento”, retiramos escala, deslocamentos e spinner animado.
+- **Cortados:** efeitos decorativos contínuos, animação de preços e molas longas. Não ajudam a escolher peças nem confirmar a compra. Não animamos valores financeiros de forma que esconda o total confirmado pelo servidor.
+
+Indicadores nativos controlados pelo sistema, como o gesto de atualizar, seguem o comportamento da plataforma. Testar a preferência de acessibilidade também no aparelho usado na apresentação.

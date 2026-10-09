@@ -5,3 +5,10 @@ web-build/
 .env
 *.log
 .DS_Store
+
+google-services.json
+GoogleService-Info.plist
+*firebase*.json
+*service-account*.json
+.env.*
+!.env.example

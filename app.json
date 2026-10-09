@@ -13,7 +13,8 @@
       "backgroundColor": "#0F1015"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.simasturbogarage"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +28,22 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permitir anexar fotos às avaliações das peças.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Permitir ordenar os pontos de retirada por distância."
+        }
+      ]
     ]
   }
 }

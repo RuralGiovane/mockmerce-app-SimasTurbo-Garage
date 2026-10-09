@@ -23,6 +23,7 @@ export function usePayOrder() {
       payOrder(v.id, v.method, v.simulate),
     onSuccess: (order: Order) => {
       queryClient.setQueryData(queryKeys.orders.detail(order.id), order);
+      queryClient.invalidateQueries({ queryKey: ['can-review'] });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.list() });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.timeline(order.id) });
     },
@@ -36,6 +37,7 @@ export function useCancelOrder() {
     mutationFn: (id: string) => cancelOrder(id),
     onSuccess: (order: Order) => {
       queryClient.setQueryData(queryKeys.orders.detail(order.id), order);
+      queryClient.invalidateQueries({ queryKey: ['can-review'] });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.list() });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.timeline(order.id) });
     },

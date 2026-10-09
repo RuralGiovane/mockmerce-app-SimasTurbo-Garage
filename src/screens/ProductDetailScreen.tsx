@@ -1,3 +1,4 @@
+import { ReviewsSection } from '@/components/ReviewsSection';
 import { useMemo, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -79,6 +80,7 @@ export function ProductDetailScreen({ route, navigation }: Props) {
         ) : null}
 
         <Text style={styles.name}>{product.name}</Text>
+        <Text style={styles.desc}>{product.rating?.count ? `★ ${product.rating.average.toFixed(1)} · ${product.rating.count} avaliações` : 'Sem avaliações ainda'}</Text>
 
         <View style={styles.priceRow}>
           <View>
@@ -143,6 +145,7 @@ export function ProductDetailScreen({ route, navigation }: Props) {
           disabled={outOfStock || addItem.isPending || !selected}
         />
       </View>
+      <ReviewsSection id={id} onReview={() => navigation.navigate('Review', { id })} />
     </ScrollView>
   );
 }

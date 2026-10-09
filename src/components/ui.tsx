@@ -1,4 +1,6 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import { MotionPressable as Pressable } from './MotionPressable';
+import { useMotionEnabled } from '@/lib/motion';
 import { colors } from '@/theme/colors';
 
 /** Campo de texto padronizado dark para login, cadastro e formulários. */
@@ -26,9 +28,10 @@ export function Center({ children }: { children: React.ReactNode }) {
 }
 
 export function Loading({ label = 'Acelerando motores…' }: { label?: string }) {
+  const animate = useMotionEnabled();
   return (
     <Center>
-      <ActivityIndicator size="large" color={colors.primary} />
+      {animate ? <ActivityIndicator size="large" color={colors.primary} /> : <Text accessibilityRole="progressbar" style={styles.loadingText}>⌛ Carregando</Text>}
       <Text style={styles.loadingText}>{label}</Text>
     </Center>
   );
@@ -161,7 +164,6 @@ const styles = StyleSheet.create({
   },
   btnPressed: {
     opacity: 0.85,
-    transform: [{ scale: 0.98 }],
   },
   btnDisabled: {
     opacity: 0.45,

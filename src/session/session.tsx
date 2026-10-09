@@ -1,3 +1,4 @@
+import { clearNotificationNavigation } from '@/lib/notificationNavigation';
 import { createContext, useContext, useEffect, useMemo, useState, useCallback, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { setCustomerToken, setUnauthorizedHandler } from '@/services/http';
@@ -22,6 +23,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   const signOut = useCallback(async () => {
+    clearNotificationNavigation();
     if (customer?.id) {
       await removeCustomerFavoritesCache(customer.id);
     }

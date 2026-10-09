@@ -2,8 +2,8 @@ import { http } from './http';
 import type { Order, PaymentMethod, TimelineEntry } from '@/types/api';
 
 /** POST /orders/checkout — cria o pedido a partir do carrinho ativo (status PENDING). */
-export async function checkout(): Promise<Order> {
-  const { data } = await http.post<Order>('/orders/checkout');
+export async function checkout(pickupPointId?: string): Promise<Order> {
+  const { data } = await http.post<Order>('/orders/checkout', pickupPointId ? { pickupPointId } : {});
   return data;
 }
 

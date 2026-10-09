@@ -10,7 +10,7 @@ import { colors } from '@/theme/colors';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Checkout'>;
 
-export function CheckoutScreen({ navigation }: Props) {
+export function CheckoutScreen({ navigation, route }: Props) {
   const { data: cart, isLoading, isError, error, refetch } = useCart();
   const checkout = useCheckout();
 
@@ -21,7 +21,7 @@ export function CheckoutScreen({ navigation }: Props) {
   const vazio = items.length === 0;
 
   function confirmar() {
-    checkout.mutate(undefined, {
+    checkout.mutate(route.params?.pickupPointId, {
       onSuccess: (order) => navigation.replace('Order', { id: order.id }),
     });
   }
@@ -57,6 +57,9 @@ export function CheckoutScreen({ navigation }: Props) {
       />
 
       <View style={styles.footer}>
+        <Text style={styles.name}>{route.params?.pickupPointName ? `Retirada: ${route.params.pickupPointName}` : 'Entrega padrão (sem ponto de retirada)'}</Text>
+        <Button label="Escolher ponto de retirada" variant="ghost" disabled={checkout.isPending} onPress={() => navigation.navigate('PickupPoints', { select: true })} />
+        {route.params?.pickupPointId && <Button label="Usar entrega padrão" variant="ghost" disabled={checkout.isPending} onPress={() => navigation.setParams({ pickupPointId: undefined, pickupPointName: undefined })} />}
         <View style={styles.totalCard}>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>TOTAL A PAGAR</Text>

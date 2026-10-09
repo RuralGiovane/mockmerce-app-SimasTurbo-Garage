@@ -74,6 +74,7 @@ export function OrderScreen({ route }: Props) {
         </View>
       </View>
 
+      {(order.pickupPoint || order.pickupPointId) && <View style={styles.headerCard}><Text style={styles.name}>Retirada: {order.pickupPoint?.name ?? order.pickupPointId}</Text></View>}
       {/* Alertas de Status */}
       {paid && (
         <View style={styles.successBanner}>

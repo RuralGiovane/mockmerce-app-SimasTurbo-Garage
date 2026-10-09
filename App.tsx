@@ -1,3 +1,9 @@
+import { NotificationProvider } from '@/context/NotificationContext';
+import { navigationRef, flushNotificationNavigation } from '@/lib/notificationNavigation';
+import { ReviewScreen } from '@/screens/ReviewScreen';
+import { PickupPointsScreen } from '@/screens/PickupPointsScreen';
+import { ProfileScreen } from '@/screens/ProfileScreen';
+import { useMotionEnabled } from '@/lib/motion';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,8 +35,9 @@ const AppStack = createNativeStackNavigator<RootStackParamList>();
 
 // Fluxo de Login do app
 function AuthFlow() {
+  const animate = useMotionEnabled();
   return (
-    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+    <AuthStack.Navigator screenOptions={{ headerShown: false, animation: animate ? 'default' : 'none' }}>
       <AuthStack.Screen name="SignIn" component={SignInScreen} />
       <AuthStack.Screen name="SignUp" component={SignUpScreen} />
       <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
@@ -40,9 +47,11 @@ function AuthFlow() {
 
 // Fluxo principal da loja
 function AppFlow() {
+  const animate = useMotionEnabled();
   return (
     <AppStack.Navigator
       screenOptions={{
+        animation: animate ? 'default' : 'none',
         headerStyle: {
           backgroundColor: colors.surface,
         },
@@ -64,6 +73,9 @@ function AppFlow() {
       <AppStack.Screen name="Checkout" component={CheckoutScreen} options={{ title: 'Revisão do Pedido' }} />
       <AppStack.Screen name="Order" component={OrderScreen} options={{ title: 'Ordem de Serviço' }} />
       <AppStack.Screen name="Orders" component={OrdersScreen} options={{ title: 'Histórico de Pedidos' }} />
+      <AppStack.Screen name="Review" component={ReviewScreen} options={{ title: 'Avaliar peça' }} />
+      <AppStack.Screen name="PickupPoints" component={PickupPointsScreen} options={{ title: 'Pontos de retirada' }} />
+      <AppStack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil da garagem' }} />
     </AppStack.Navigator>
   );
 }
@@ -84,9 +96,11 @@ export default function App() {
     <SafeAreaProvider >
       <QueryClientProvider client={queryClient} >
         <SessionProvider>
-          <NavigationContainer>
+          <NotificationProvider>
+          <NavigationContainer ref={navigationRef} onReady={flushNotificationNavigation} onStateChange={flushNotificationNavigation}>
             <RootNavigator />
           </NavigationContainer>
+          </NotificationProvider>
           <StatusBar style="light" />
         </SessionProvider>
       </QueryClientProvider>

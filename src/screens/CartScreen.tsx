@@ -1,10 +1,13 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { MotionPressable as Pressable } from '@/components/MotionPressable';
+import Reanimated from 'react-native-reanimated';
+import { itemExit, itemLayout, useMotionEnabled } from '@/lib/motion';
+import { StyleSheet, Text, View } from 'react-native';
 import { useCart } from '@/hooks/useCart';
 import { useCartMutations } from '@/hooks/useCartMutations';
 import { useSession } from '@/session/session';
 import { money } from '@/lib/format';
 import { Button, ErrorState, Loading } from '@/components/ui';
-import type { ApiError } from '@/types/api';
+import type { ApiError, CartItem } from '@/types/api';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@/navigation';
 import { colors } from '@/theme/colors';
@@ -12,6 +15,7 @@ import { colors } from '@/theme/colors';
 type Props = NativeStackScreenProps<RootStackParamList, 'Cart'>;
 
 export function CartScreen({ navigation }: Props) {
+  const animate = useMotionEnabled();
   const { data: cart, isLoading, isError, error, refetch } = useCart();
   const { setQuantity, removeItem } = useCartMutations();
   const { customer } = useSession();
@@ -23,9 +27,9 @@ export function CartScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <Reanimated.FlatList<CartItem> itemLayoutAnimation={animate ? itemLayout : undefined} removeClippedSubviews={false}
         data={items}
-        keyExtractor={(it) => it.variantId}
+        keyExtractor={(it: CartItem) => it.variantId}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View style={styles.headerBox}>
@@ -50,8 +54,8 @@ export function CartScreen({ navigation }: Props) {
             </View>
           </View>
         }
-        renderItem={({ item }) => (
-          <View style={styles.card}>
+        renderItem={({ item }: { item: CartItem }) => (
+          <Reanimated.View exiting={animate ? itemExit : undefined} style={styles.card}>
             <View style={styles.info}>
               <Text style={styles.name} numberOfLines={2}>
                 {item.name}
@@ -86,7 +90,7 @@ export function CartScreen({ navigation }: Props) {
                 <Text style={styles.removeText}>🗑️ Remover</Text>
               </Pressable>
             </View>
-          </View>
+          </Reanimated.View>
         )}
         ListFooterComponent={
           items.length ? (

@@ -1,4 +1,5 @@
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { MotionPressable as Pressable } from '@/components/MotionPressable';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useOrders } from '@/hooks/useOrders';
 import { statusColor, statusLabel } from '@/lib/orders';
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
   },
   cardPressed: {
     borderColor: colors.primary,
-    transform: [{ scale: 0.99 }],
   },
   top: {
     flexDirection: 'row',

@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { listFavorites, addFavorite as addFavoriteService, removeFavorite as removeFavoriteService } from '@/services/favorites';
 import { getCustomerFavoritesCache, saveCustomerFavoritesCache } from '@/services/storage';
@@ -50,6 +51,7 @@ export function useFavoriteMutations() {
 
   const add = useMutation({
     mutationFn: (variantId: string) => addFavoriteService(variantId),
+    onError: (error) => Alert.alert('Favoritos', error.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.favorites.all });
     },
@@ -57,6 +59,7 @@ export function useFavoriteMutations() {
 
   const remove = useMutation({
     mutationFn: (variantId: string) => removeFavoriteService(variantId),
+    onError: (error) => Alert.alert('Favoritos', error.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.favorites.all });
     },

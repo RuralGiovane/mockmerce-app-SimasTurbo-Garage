@@ -1,5 +1,8 @@
+import { MotionPressable as Pressable } from '@/components/MotionPressable';
+import Reanimated from 'react-native-reanimated';
+import { itemEntry, motion, useMotionEnabled } from '@/lib/motion';
 import { useRef, useState } from 'react';
-import { Animated, FlatList, Image, Modal, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Animated, FlatList, Image, Modal, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { money } from '@/lib/format';
@@ -7,6 +10,7 @@ import { Button, ErrorState, Loading } from '@/components/ui';
 import type { RootStackParamList } from '@/navigation';
 import type { ApiError } from '@/types/api';
 import { useProducts } from '@/hooks/useProducts';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useSession } from '@/session/session';
 import { colors } from '@/theme/colors';
 
@@ -15,9 +19,11 @@ const logoSource = require('../../assets/IMG_3357.png');
 type Props = NativeStackScreenProps<RootStackParamList, 'Products'>;
 
 export function ProductsScreen({ navigation }: Props) {
+  const animate = useMotionEnabled();
   const [search, setSearch] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const { data, isLoading, isError, error, refetch, isFetching } = useProducts({ search });
+  const debouncedSearch = useDebounce(search.trim());
+  const { data, isLoading, isError, error, refetch, isFetching } = useProducts({ search: debouncedSearch });
   const { customer, signOut } = useSession();
   const insets = useSafeAreaInsets();
 
@@ -29,12 +35,12 @@ export function ProductsScreen({ navigation }: Props) {
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 260,
+        duration: animate ? motion.drawerIn : 0,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 260,
+        duration: animate ? motion.drawerIn : 0,
         useNativeDriver: true,
       }),
     ]).start();
@@ -44,12 +50,12 @@ export function ProductsScreen({ navigation }: Props) {
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: -340,
-        duration: 220,
+        duration: animate ? motion.drawerOut : 0,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 220,
+        duration: animate ? motion.drawerOut : 0,
         useNativeDriver: true,
       }),
     ]).start(() => {
@@ -58,7 +64,7 @@ export function ProductsScreen({ navigation }: Props) {
     });
   }
 
-  function navigateTo(screen: 'Products' | 'Cart' | 'Favorites' | 'Checkout' | 'Orders'): void;
+  function navigateTo(screen: 'Products' | 'Cart' | 'Favorites' | 'Checkout' | 'Orders' | 'Profile' | 'PickupPoints'): void;
   function navigateTo( screen: 'ProductDetail', params: { id: string; name: string }): void;
   function navigateTo( screen: 'Order', params: { id: string }): void;
   function navigateTo( screen: keyof RootStackParamList, params?: { id: string; name?: string }) {
@@ -67,7 +73,7 @@ export function ProductsScreen({ navigation }: Props) {
         navigation.navigate('ProductDetail', { id: params.id, name: params.name });
       } else if (screen === 'Order' && params) {
         navigation.navigate('Order', { id: params.id });
-      } else if (screen !== 'ProductDetail' && screen !== 'Order') {
+      } else if (screen !== 'ProductDetail' && screen !== 'Order' && screen !== 'Review') {
         navigation.navigate(screen);
       }
     });
@@ -204,6 +210,8 @@ export function ProductsScreen({ navigation }: Props) {
               </Pressable>
             </View>
 
+            <Button label="Pontos de retirada" variant="ghost" onPress={() => navigateTo('PickupPoints')} />
+            <Button label="Perfil e notificações" variant="ghost" onPress={() => navigateTo('Profile')} />
             {/* Rodapé do Menu - Logout */}
             <View style={styles.drawerFooter}>
               <Button
@@ -248,7 +256,8 @@ export function ProductsScreen({ navigation }: Props) {
               </Text>
             </View>
           }
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
+            <Reanimated.View entering={animate ? itemEntry(index) : undefined}>
             <Pressable
               style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
               onPress={() => navigation.navigate('ProductDetail', { id: item.id, name: item.name })}
@@ -288,6 +297,7 @@ export function ProductsScreen({ navigation }: Props) {
                 </View>
               </View>
             </Pressable>
+            </Reanimated.View>
           )}
         />
       )}
@@ -368,14 +378,13 @@ const styles = StyleSheet.create({
   },
   btnPressed: {
     opacity: 0.75,
-    transform: [{ scale: 0.96 }],
   },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'transparent',
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
   },
   drawerContainer: {
@@ -527,7 +536,6 @@ const styles = StyleSheet.create({
   },
   cardPressed: {
     borderColor: colors.primary,
-    transform: [{ scale: 0.99 }],
   },
   thumb: {
     width: 90,

@@ -1,15 +1,19 @@
-import { FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { MotionPressable as Pressable } from '@/components/MotionPressable';
+import Reanimated from 'react-native-reanimated';
+import { itemExit, itemLayout, useMotionEnabled } from '@/lib/motion';
+import { Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useFavorites, useFavoriteMutations } from '@/hooks/useFavorites';
 import { money } from '@/lib/format';
 import { ErrorState, Loading } from '@/components/ui';
 import type { RootStackParamList } from '@/navigation';
-import type { ApiError } from '@/types/api';
+import type { ApiError, FavoriteItem } from '@/types/api';
 import { colors } from '@/theme/colors';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Favorites'>;
 
 export function FavoritesScreen({ navigation }: Props) {
+  const animate = useMotionEnabled();
   const { data: favorites, isLoading, isError, error, refetch, isFetching, isOfflineCache } = useFavorites();
   const { removeFavorite } = useFavoriteMutations();
 
@@ -39,9 +43,9 @@ export function FavoritesScreen({ navigation }: Props) {
         </View>
       )}
 
-      <FlatList
+      <Reanimated.FlatList<FavoriteItem> itemLayoutAnimation={animate ? itemLayout : undefined} removeClippedSubviews={false}
         data={items}
-        keyExtractor={(item, index) => item.variantId || item.id || String(index)}
+        keyExtractor={(item: FavoriteItem, index: number) => item.variantId || item.id || String(index)}
         contentContainerStyle={styles.list}
         refreshControl={
           <RefreshControl
@@ -60,12 +64,13 @@ export function FavoritesScreen({ navigation }: Props) {
             </Text>
           </View>
         }
-        renderItem={({ item }) => {
+        renderItem={({ item }: { item: FavoriteItem }) => {
           const name = item.productName ?? item.name ?? 'Peça sem identificação';
           const price = item.price ?? 0;
           const imageUrl = item.image;
 
           return (
+            <Reanimated.View exiting={animate ? itemExit : undefined}>
             <Pressable
               style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
               onPress={() => {
@@ -102,6 +107,7 @@ export function FavoritesScreen({ navigation }: Props) {
                 <Text style={styles.removeText}>🗑️</Text>
               </Pressable>
             </Pressable>
+            </Reanimated.View>
           );
         }}
       />
@@ -151,7 +157,6 @@ const styles = StyleSheet.create({
   },
   cardPressed: {
     borderColor: colors.primary,
-    transform: [{ scale: 0.99 }],
   },
   thumb: {
     width: 76,

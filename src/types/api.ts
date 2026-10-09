@@ -11,6 +11,7 @@ export interface Paginated<T> {
 
 /** Item retornado na LISTAGEM (GET /products) — é um resumo. */
 export interface ProductSummary {
+  rating?: import('./avaliacao').ResumoNotas;
   id: string;
   name: string;
   slug: string;
@@ -47,6 +48,7 @@ export interface ProductVariant {
 }
 
 export interface Product {
+  rating?: import('./avaliacao').ResumoNotas;
   id: string;
   name: string;
   slug: string;
@@ -126,6 +128,8 @@ export interface Payment {
 // Pedido.
 //Nota: 'status' é o estado da máquina: PENDING -> PAID / CANCELLED / ...
 export interface Order {
+  pickupPointId?: string | null;
+  pickupPoint?: import('./localizacao').PontoRetirada | null;
   id: string;
   status: string;
   total: number;

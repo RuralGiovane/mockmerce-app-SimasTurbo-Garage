@@ -74,7 +74,7 @@ A divisão abaixo organiza os responsáveis pela revisão, validação e manuten
 
 4. Inicie o aplicativo:
    ```bash
-   npx expo start --go
+   npx expo start
    ```
 ---
 
